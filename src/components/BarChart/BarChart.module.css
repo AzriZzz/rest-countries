@@ -1,0 +1,31 @@
+.chart_heading {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.renderChart {
+  margin-top: 40px;
+}
+
+.empty_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  text-align: center;
+
+
+  height: 380px;
+  margin-top: 40px;
+  margin-left: 20px;
+  padding: 20px;
+  background-color: var(--background-color-light);
+  box-shadow: var(--box-shadow);
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 720px) {
+  .empty_container {
+    margin-left: 0;
+  }
+}

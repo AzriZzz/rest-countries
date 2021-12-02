@@ -7,6 +7,7 @@ import styles from "./CountriesTable.module.css";
 import Highlighter from "react-highlight-words";
 import Image from "next/image";
 import ReactPaginate from "react-paginate";
+import BarChart from "../BarChart/BarChart";
 
 const orderBy = (countries, value, direction) => {
   if (direction === "asc") {
@@ -53,16 +54,17 @@ const CountriesTable = ({ countries, keyword }) => {
   const [value, setValue] = useState();
   const [filter, setFilter] = useState([]);
 
+  // order ascending and descending
   const orderedCountries = orderBy(countries, value, direction);
 
   // pagination
-  const [countryPaginate, setCountryPaginate] = useState(orderedCountries);
   const [pageNumber, setPageNumber] = useState(0);
-
   const countryPerPage = 5;
   const pagesVisited = pageNumber * countryPerPage;
-
   const pageCount = Math.ceil(orderedCountries.length / countryPerPage);
+
+  // barChart mapping
+  const [barChart, setBarChart] = useState(); 
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
@@ -161,6 +163,7 @@ const CountriesTable = ({ countries, keyword }) => {
       );
     }
 
+    setBarChart(storageFavourites)
     // save into local storage
     localStorage.setItem("favourite", JSON.stringify(storageFavourites));
   };
@@ -169,6 +172,14 @@ const CountriesTable = ({ countries, keyword }) => {
     const setKeyword = [keyword];
     setFilter(setKeyword);
   }, [keyword]);
+
+  useEffect(() => {
+    let storageFavourites = [];
+    if (localStorage.getItem("favourite")) {
+      storageFavourites = JSON.parse(localStorage.getItem("favourite"));
+    }
+    setBarChart(storageFavourites)
+  }, []);
 
   return (
     <div className={styles.table_container}>
@@ -219,7 +230,7 @@ const CountriesTable = ({ countries, keyword }) => {
         )}
       </div>
       <div className={styles.chart}>
-          Chart
+          <BarChart barChart={barChart} />
       </div>
     </div>
   );
