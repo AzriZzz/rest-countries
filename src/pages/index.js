@@ -19,22 +19,26 @@ export default function Home({ countries }) {
   };
 
   useEffect(() => {
-    // Perform localStorage action
-    const storageFavourites = JSON.parse((localStorage.getItem('favourite')))
-    console.log('index : ',storageFavourites);
+    // Perform localStorage retrieval
+    const storageFavourites = JSON.parse(localStorage.getItem("favourite"));
 
+    // check is array is empty or undefined
     if (Array.isArray(storageFavourites) && storageFavourites.length) {
       for (let storage of storageFavourites) {
-        let country = filteredCountries.filter( el => el.name === storage.name);
-        country[0].favourite = storage.favourite
+        let country = filteredCountries.filter(
+          (el) => el.name === storage.name
+        );
+        country[0].favourite = storage.favourite;
       }
     }
-  }, [])
+  }, [filteredCountries]);
 
   return (
     <Layout>
       <div className={styles.inputContainer}>
-        <div className={styles.counts}>Found {filteredCountries.length} countries</div>
+        <div className={styles.counts}>
+          Found {filteredCountries.length} countries
+        </div>
 
         <div className={styles.input}>
           <SearchInput
@@ -54,10 +58,10 @@ export const getStaticProps = async () => {
   const countries = await res.json();
 
   for (let country of countries) {
-    if (!country.hasOwnProperty('capital')) {
-      country.capital = ''
+    if (!country.hasOwnProperty("capital")) {
+      country.capital = "";
     }
-    country.favourite = false
+    country.favourite = false;
   }
 
   return {
