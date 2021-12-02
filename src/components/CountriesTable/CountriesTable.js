@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import styles from "./CountriesTable.module.css";
 import Highlighter from "react-highlight-words";
 import Image from "next/image";
+import ReactPaginate from "react-paginate";
 
 const orderBy = (countries, value, direction) => {
   if (direction === "asc") {
@@ -50,10 +51,76 @@ const SortArrow = ({ direction }) => {
 const CountriesTable = ({ countries, keyword }) => {
   const [direction, setDirection] = useState();
   const [value, setValue] = useState();
-
   const [filter, setFilter] = useState([]);
 
   const orderedCountries = orderBy(countries, value, direction);
+
+  // pagination
+  const [countryPaginate, setCountryPaginate] = useState(orderedCountries);
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const countryPerPage = 5;
+  const pagesVisited = pageNumber * countryPerPage;
+
+  const pageCount = Math.ceil(orderedCountries.length / countryPerPage);
+
+  const changePage = ({selected}) => {
+    setPageNumber(selected);
+  }
+
+  const displayCountries = orderedCountries
+    .slice(pagesVisited, pagesVisited + countryPerPage)
+    .map((country, index) => {
+      return (
+        <div key={index} className={styles.row}>
+          <div className={styles.flag}>
+            <Image
+              src={country.flag}
+              alt={country.flag}
+              className="relative"
+              width={40}
+              height={40}
+              objectFit="contain"
+            />
+          </div>
+          <div className={styles.name}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.name}
+            />
+          </div>
+          <div className={styles.region}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.region}
+            />
+          </div>
+          <div className={styles.capital}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.capital}
+            />
+          </div>
+          <div className={styles.favourite}>
+            {/* adding key to re-rendered the value of the checkbox when update? */}
+            <input
+              key={Math.random()}
+              type="checkbox"
+              defaultChecked={country.favourite}
+              onChange={() => handleChange(country)}
+            />
+          </div>
+        </div>
+      );
+    });
+
+
 
   const switchDirection = () => {
     if (!direction) {
@@ -70,7 +137,7 @@ const CountriesTable = ({ countries, keyword }) => {
     setValue(value);
   };
 
-  const handleChange = (country) => {    
+  const handleChange = (country) => {
     let storageFavourites = [];
 
     // retrieve data from if exist in localStorage
@@ -81,7 +148,7 @@ const CountriesTable = ({ countries, keyword }) => {
     // create a new favourite object
     const newFavourite = {
       ...country,
-      favourite: country.favourite = country.favourite ? false : true,
+      favourite: (country.favourite = country.favourite ? false : true),
     };
 
     // check whether if exist or not in the storage
@@ -139,53 +206,18 @@ const CountriesTable = ({ countries, keyword }) => {
       {orderedCountries.length === 0 ? (
         <div className={styles.not_found}>No country found</div>
       ) : (
-        orderedCountries.map((country, index) => (
-          <div key={index} className={styles.row}>
-            <div className={styles.flag}>
-              <Image
-                src={country.flag}
-                alt={country.flag}
-                className="relative"
-                width={40}
-                height={40}
-                objectFit="contain"
-              />
-            </div>
-            <div className={styles.name}>
-              <Highlighter
-                highlightClassName={styles.highlight}
-                searchWords={filter}
-                autoEscape={true}
-                textToHighlight={country.name}
-              />
-            </div>
-            <div className={styles.region}>
-              <Highlighter
-                highlightClassName={styles.highlight}
-                searchWords={filter}
-                autoEscape={true}
-                textToHighlight={country.region}
-              />
-            </div>
-            <div className={styles.capital}>
-              <Highlighter
-                highlightClassName={styles.highlight}
-                searchWords={filter}
-                autoEscape={true}
-                textToHighlight={country.capital}
-              />
-            </div>
-            <div className={styles.favourite}>
-              {/* adding key to re-rendered the value of the checkbox when update? */}
-              <input
-                key={Math.random()}
-                type="checkbox"
-                defaultChecked={country.favourite}
-                onChange={() => handleChange(country)}
-              />
-            </div>
-          </div>
-        ))
+        <div>
+          {displayCountries}
+          <ReactPaginate
+            previousLabel={'Previous'}
+            nextLabel={'Next'}
+            pageCount={pageCount}
+            onPageChange={changePage}
+            containerClassName={styles.paginationBttns}
+            activeClassName={styles.paginationActive}
+          />
+        </div>
+        
       )}
     </div>
   );
