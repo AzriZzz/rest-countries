@@ -66,3 +66,7 @@
 .capital {
   flex: 1
 }
+
+.highlight {
+  font-weight: 700;
+}

@@ -2,8 +2,9 @@ import {
   KeyboardArrowDownRounded,
   KeyboardArrowUpRounded,
 } from "@material-ui/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./CountriesTable.module.css";
+import Highlighter from "react-highlight-words";
 
 const orderBy = (countries, value, direction) => {
   if (direction === "asc") {
@@ -45,9 +46,11 @@ const SortArrow = ({ direction }) => {
   }
 };
 
-const CountriesTable = ({ countries }) => {
+const CountriesTable = ({ countries, keyword }) => {
   const [direction, setDirection] = useState();
   const [value, setValue] = useState();
+
+  const [filter, setFilter] = useState([]);
 
   const orderedCountries = orderBy(countries, value, direction);
 
@@ -65,6 +68,11 @@ const CountriesTable = ({ countries }) => {
     switchDirection();
     setValue(value);
   };
+
+  useEffect(() => {
+    const setKeyword = [keyword];
+    setFilter(setKeyword);
+  }, [keyword]);
 
   return (
     <div>
@@ -96,9 +104,30 @@ const CountriesTable = ({ countries }) => {
 
       {orderedCountries.map((country, index) => (
         <div key={index} className={styles.row}>
-          <div className={styles.name}>{country.name}</div>
-          <div className={styles.region}>{country.region}</div>
-          <div className={styles.capital}>{country.capital}</div>
+          <div className={styles.name}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.name}
+            />
+          </div>
+          <div className={styles.region}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.region}
+            />
+          </div>
+          <div className={styles.capital}>
+            <Highlighter
+              highlightClassName={styles.highlight}
+              searchWords={filter}
+              autoEscape={true}
+              textToHighlight={country.capital}
+            />
+          </div>
         </div>
       ))}
     </div>
