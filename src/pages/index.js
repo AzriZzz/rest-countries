@@ -2,10 +2,9 @@ import Layout from "../components/Layout/Layout";
 import styles from "../styles/Home.module.css";
 import SearchInput from "../components/SearchInput/SearchInput";
 import CountriesTable from "../components/CountriesTable/CountriesTable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home({ countries }) {
-  console.log(countries.filter( country => country.name === 'Afghanistan'))
   const [keyword, setKeyword] = useState("");
 
   const filteredCountries = countries.filter(
@@ -16,9 +15,21 @@ export default function Home({ countries }) {
 
   const onInputChange = (e) => {
     e.preventDefault();
-
     setKeyword(e.target.value.toLowerCase());
   };
+
+  useEffect(() => {
+    // Perform localStorage action
+    const storageFavourites = JSON.parse((localStorage.getItem('favourite')))
+    console.log('index : ',storageFavourites);
+
+    if (Array.isArray(storageFavourites) && storageFavourites.length) {
+      for (let storage of storageFavourites) {
+        let country = filteredCountries.filter( el => el.name === storage.name);
+        country[0].favourite = storage.favourite
+      }
+    }
+  }, [])
 
   return (
     <Layout>
@@ -46,7 +57,7 @@ export const getStaticProps = async () => {
     if (!country.hasOwnProperty('capital')) {
       country.capital = ''
     }
-    country.bookmark = false
+    country.favourite = false
   }
 
   return {

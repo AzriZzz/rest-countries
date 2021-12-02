@@ -70,6 +70,36 @@ const CountriesTable = ({ countries, keyword }) => {
     setValue(value);
   };
 
+  const handleChange = (country) => {    
+    let storageFavourites = [];
+
+    // retrieve data from if exist in localStorage
+    if (localStorage.getItem("favourite")) {
+      storageFavourites = JSON.parse(localStorage.getItem("favourite"));
+    }
+
+    // create a new favourite object
+    const newFavourite = {
+      ...country,
+      favourite: country.favourite = country.favourite ? false : true,
+    };
+
+    // check whether if exist or not in the storage
+    let found = storageFavourites.filter((el) => el.name === newFavourite.name);
+
+    // push into array if not exist in storage and if favourite is true
+    if (found.length === 0 && newFavourite.favourite) {
+      storageFavourites.push(newFavourite);
+    } else {
+      storageFavourites = storageFavourites.filter(
+        (el) => el.name !== newFavourite.name
+      );
+    }
+
+    // save into local storage
+    localStorage.setItem("favourite", JSON.stringify(storageFavourites));
+  };
+
   useEffect(() => {
     const setKeyword = [keyword];
     setFilter(setKeyword);
@@ -102,49 +132,61 @@ const CountriesTable = ({ countries, keyword }) => {
           <div>Capital</div>
           <SortArrow direction={direction} />
         </button>
+
+        <div className={styles.heading_favourite}>Favourite</div>
       </div>
 
       {orderedCountries.length === 0 ? (
         <div className={styles.not_found}>No country found</div>
-      ) : orderedCountries.map((country, index) => (
-        <div key={index} className={styles.row}>
-          <div className={styles.flag}>
-            <Image
-              src={country.flag}
-              alt={country.flag}
-              className="relative"
-              width={40}
-              height={40}
-              objectFit="contain"
-            />
+      ) : (
+        orderedCountries.map((country, index) => (
+          <div key={index} className={styles.row}>
+            <div className={styles.flag}>
+              <Image
+                src={country.flag}
+                alt={country.flag}
+                className="relative"
+                width={40}
+                height={40}
+                objectFit="contain"
+              />
+            </div>
+            <div className={styles.name}>
+              <Highlighter
+                highlightClassName={styles.highlight}
+                searchWords={filter}
+                autoEscape={true}
+                textToHighlight={country.name}
+              />
+            </div>
+            <div className={styles.region}>
+              <Highlighter
+                highlightClassName={styles.highlight}
+                searchWords={filter}
+                autoEscape={true}
+                textToHighlight={country.region}
+              />
+            </div>
+            <div className={styles.capital}>
+              <Highlighter
+                highlightClassName={styles.highlight}
+                searchWords={filter}
+                autoEscape={true}
+                textToHighlight={country.capital}
+              />
+            </div>
+            <div className={styles.favourite}>
+              {/* adding key to re-rendered the value of the checkbox when update? */}
+              <input
+                key={Math.random()}
+                type="checkbox"
+                defaultChecked={country.favourite}
+                onChange={() => handleChange(country)}
+              />
+            </div>
           </div>
-          <div className={styles.name}>
-            <Highlighter
-              highlightClassName={styles.highlight}
-              searchWords={filter}
-              autoEscape={true}
-              textToHighlight={country.name}
-            />
-          </div>
-          <div className={styles.region}>
-            <Highlighter
-              highlightClassName={styles.highlight}
-              searchWords={filter}
-              autoEscape={true}
-              textToHighlight={country.region}
-            />
-          </div>
-          <div className={styles.capital}>
-            <Highlighter
-              highlightClassName={styles.highlight}
-              searchWords={filter}
-              autoEscape={true}
-              textToHighlight={country.capital}
-            />
-          </div>
-        </div>
-      ))}
-
+        ))
+      )}
     </div>
   );
 };

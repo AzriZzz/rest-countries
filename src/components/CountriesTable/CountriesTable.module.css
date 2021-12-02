@@ -18,7 +18,8 @@
 
 .heading_name,
 .heading_region,
-.heading_capital {
+.heading_capital,
+.heading_favourite {
   flex: 3;
   padding: 20px;
   color: var(--text-color-secondary);
@@ -63,16 +64,20 @@
 }
 
 .name {
-  flex: 3;
+  flex: 4;
   text-align: left;
 }
 
 .region {
-  flex: 3
+  flex: 4
 }
 
 .capital {
-  flex: 3
+  flex: 4
+}
+
+.favourite {
+  flex: 4
 }
 
 .highlight {
@@ -92,7 +97,7 @@
 /* .flag img */
 
 @media screen and (max-width: 720px) {
-  .region, .heading_region {
+  .region, .heading_region , .heading_favourite{
     display: none;
   }
 }
