@@ -50,21 +50,68 @@ const SortArrow = ({ direction }) => {
 };
 
 const CountriesTable = ({ countries, keyword }) => {
-  const [direction, setDirection] = useState();
-  const [value, setValue] = useState();
-  const [filter, setFilter] = useState([]);
+  // state to highlight keyword
+  const [filterKeyword, setFilterKeyword] = useState([]);
 
   // order ascending and descending
+  const [direction, setDirection] = useState();
+  const [directionName, setDirectionName] = useState();
+  const [directionRegion, setDirectionRegion] = useState();
+  const [directionCapital, setDirectionCapital] = useState();
+  const [value, setValue] = useState();
+
   const orderedCountries = orderBy(countries, value, direction);
 
-  // pagination
+  const switchDirection = (value) => {
+    if (value === 'name') {
+      if (!directionName) {
+        setDirectionName("desc");
+      } else if (directionName === "desc") {
+        setDirectionName("asc");
+      } else {
+        setDirectionName(null);
+      }
+    }
+
+    if (value === 'region') {
+      if (!directionRegion) {
+        setDirectionRegion("desc");
+      } else if (directionRegion === "desc") {
+        setDirectionRegion("asc");
+      } else {
+        setDirectionRegion(null);
+      }
+    }
+
+    if (value === 'capital') {
+      if (!directionCapital) {
+        setDirectionCapital("desc");
+      } else if (directionCapital === "desc") {
+        setDirectionCapital("asc");
+      } else {
+        setDirectionCapital(null);
+      }
+    }
+    
+    if (!direction) {
+      setDirection("desc");
+    } else if (direction === "desc") {
+      setDirection("asc");
+    } else {
+      setDirection(null);
+    }
+  };
+
+  const setValueDirection = (value) => {
+    switchDirection(value);
+    setValue(value);
+  };
+
+  // pagination react-paginate
   const [pageNumber, setPageNumber] = useState(0);
   const countryPerPage = 5;
   const pagesVisited = pageNumber * countryPerPage;
   const pageCount = Math.ceil(orderedCountries.length / countryPerPage);
-
-  // barChart mapping
-  const [barChart, setBarChart] = useState(); 
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
@@ -88,7 +135,7 @@ const CountriesTable = ({ countries, keyword }) => {
           <div className={styles.name}>
             <Highlighter
               highlightClassName={styles.highlight}
-              searchWords={filter}
+              searchWords={filterKeyword}
               autoEscape={true}
               textToHighlight={country.name}
             />
@@ -96,7 +143,7 @@ const CountriesTable = ({ countries, keyword }) => {
           <div className={styles.region}>
             <Highlighter
               highlightClassName={styles.highlight}
-              searchWords={filter}
+              searchWords={filterKeyword}
               autoEscape={true}
               textToHighlight={country.region}
             />
@@ -104,7 +151,7 @@ const CountriesTable = ({ countries, keyword }) => {
           <div className={styles.capital}>
             <Highlighter
               highlightClassName={styles.highlight}
-              searchWords={filter}
+              searchWords={filterKeyword}
               autoEscape={true}
               textToHighlight={country.capital}
             />
@@ -122,20 +169,8 @@ const CountriesTable = ({ countries, keyword }) => {
       );
     });
 
-  const switchDirection = () => {
-    if (!direction) {
-      setDirection("desc");
-    } else if (direction === "desc") {
-      setDirection("asc");
-    } else {
-      setDirection(null);
-    }
-  };
-
-  const setValueDirection = (value) => {
-    switchDirection();
-    setValue(value);
-  };
+  // barChart mapping
+  const [barChart, setBarChart] = useState();
 
   const handleChange = (country) => {
     let storageFavourites = [];
@@ -163,14 +198,14 @@ const CountriesTable = ({ countries, keyword }) => {
       );
     }
 
-    setBarChart(storageFavourites)
+    setBarChart(storageFavourites);
     // save into local storage
     localStorage.setItem("favourite", JSON.stringify(storageFavourites));
   };
 
   useEffect(() => {
     const setKeyword = [keyword];
-    setFilter(setKeyword);
+    setFilterKeyword(setKeyword);
   }, [keyword]);
 
   useEffect(() => {
@@ -178,7 +213,7 @@ const CountriesTable = ({ countries, keyword }) => {
     if (localStorage.getItem("favourite")) {
       storageFavourites = JSON.parse(localStorage.getItem("favourite"));
     }
-    setBarChart(storageFavourites)
+    setBarChart(storageFavourites);
   }, []);
 
   return (
@@ -191,7 +226,7 @@ const CountriesTable = ({ countries, keyword }) => {
             onClick={() => setValueDirection("name")}
           >
             <div>Name</div>
-            <SortArrow direction={direction} />
+            <SortArrow direction={directionName} />
           </button>
 
           <button
@@ -199,7 +234,7 @@ const CountriesTable = ({ countries, keyword }) => {
             onClick={() => setValueDirection("region")}
           >
             <div>Region</div>
-            <SortArrow direction={direction} />
+            <SortArrow direction={directionRegion} />
           </button>
 
           <button
@@ -207,7 +242,7 @@ const CountriesTable = ({ countries, keyword }) => {
             onClick={() => setValueDirection("capital")}
           >
             <div>Capital</div>
-            <SortArrow direction={direction} />
+            <SortArrow direction={directionCapital} />
           </button>
 
           <div className={styles.heading_favourite}>Favourite</div>
@@ -230,7 +265,7 @@ const CountriesTable = ({ countries, keyword }) => {
         )}
       </div>
       <div className={styles.chart}>
-          <BarChart barChart={barChart} />
+        <BarChart barChart={barChart} />
       </div>
     </div>
   );
