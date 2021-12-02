@@ -64,9 +64,9 @@ const CountriesTable = ({ countries, keyword }) => {
 
   const pageCount = Math.ceil(orderedCountries.length / countryPerPage);
 
-  const changePage = ({selected}) => {
+  const changePage = ({ selected }) => {
     setPageNumber(selected);
-  }
+  };
 
   const displayCountries = orderedCountries
     .slice(pagesVisited, pagesVisited + countryPerPage)
@@ -120,8 +120,6 @@ const CountriesTable = ({ countries, keyword }) => {
       );
     });
 
-
-
   const switchDirection = () => {
     if (!direction) {
       setDirection("desc");
@@ -173,52 +171,56 @@ const CountriesTable = ({ countries, keyword }) => {
   }, [keyword]);
 
   return (
-    <div>
-      <div className={styles.heading}>
-        <div className={styles.heading_flag}></div>
-        <button
-          className={styles.heading_name}
-          onClick={() => setValueDirection("name")}
-        >
-          <div>Name</div>
-          <SortArrow direction={direction} />
-        </button>
+    <div className={styles.table_container}>
+      <div className={styles.table}>
+        <div className={styles.heading}>
+          <div className={styles.heading_flag}></div>
+          <button
+            className={styles.heading_name}
+            onClick={() => setValueDirection("name")}
+          >
+            <div>Name</div>
+            <SortArrow direction={direction} />
+          </button>
 
-        <button
-          className={styles.heading_region}
-          onClick={() => setValueDirection("region")}
-        >
-          <div>Region</div>
-          <SortArrow direction={direction} />
-        </button>
+          <button
+            className={styles.heading_region}
+            onClick={() => setValueDirection("region")}
+          >
+            <div>Region</div>
+            <SortArrow direction={direction} />
+          </button>
 
-        <button
-          className={styles.heading_capital}
-          onClick={() => setValueDirection("capital")}
-        >
-          <div>Capital</div>
-          <SortArrow direction={direction} />
-        </button>
+          <button
+            className={styles.heading_capital}
+            onClick={() => setValueDirection("capital")}
+          >
+            <div>Capital</div>
+            <SortArrow direction={direction} />
+          </button>
 
-        <div className={styles.heading_favourite}>Favourite</div>
-      </div>
-
-      {orderedCountries.length === 0 ? (
-        <div className={styles.not_found}>No country found</div>
-      ) : (
-        <div>
-          {displayCountries}
-          <ReactPaginate
-            previousLabel={'Previous'}
-            nextLabel={'Next'}
-            pageCount={pageCount}
-            onPageChange={changePage}
-            containerClassName={styles.paginationBttns}
-            activeClassName={styles.paginationActive}
-          />
+          <div className={styles.heading_favourite}>Favourite</div>
         </div>
-        
-      )}
+
+        {orderedCountries.length === 0 ? (
+          <div className={styles.not_found}>No country found</div>
+        ) : (
+          <div>
+            {displayCountries}
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={changePage}
+              containerClassName={styles.paginationBttns}
+              activeClassName={styles.paginationActive}
+            />
+          </div>
+        )}
+      </div>
+      <div className={styles.chart}>
+          Chart
+      </div>
     </div>
   );
 };

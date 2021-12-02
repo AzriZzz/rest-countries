@@ -28,7 +28,7 @@ export default function Home({ countries }) {
         let country = filteredCountries.filter(
           (el) => el.name === storage.name
         );
-        country[0].favourite = storage.favourite;
+        country.favourite = storage.favourite;
       }
     }
   }, [filteredCountries]);
