@@ -1,5 +1,13 @@
 ## Getting Started
 
+Before start, install all the package
+
+```bash
+npm i
+# or
+yarn install
+```
+
 First, run the development server:
 
 ```bash
