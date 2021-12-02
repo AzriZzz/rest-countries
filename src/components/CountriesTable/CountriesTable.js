@@ -5,6 +5,7 @@ import {
 import { useState, useEffect } from "react";
 import styles from "./CountriesTable.module.css";
 import Highlighter from "react-highlight-words";
+import Image from "next/image";
 
 const orderBy = (countries, value, direction) => {
   if (direction === "asc") {
@@ -77,6 +78,7 @@ const CountriesTable = ({ countries, keyword }) => {
   return (
     <div>
       <div className={styles.heading}>
+        <div className={styles.heading_flag}></div>
         <button
           className={styles.heading_name}
           onClick={() => setValueDirection("name")}
@@ -102,8 +104,20 @@ const CountriesTable = ({ countries, keyword }) => {
         </button>
       </div>
 
-      {orderedCountries.map((country, index) => (
+      {orderedCountries.length === 0 ? (
+        <div className={styles.not_found}>No country found</div>
+      ) : orderedCountries.map((country, index) => (
         <div key={index} className={styles.row}>
+          <div className={styles.flag}>
+            <Image
+              src={country.flag}
+              alt={country.flag}
+              className="relative"
+              width={40}
+              height={40}
+              objectFit="contain"
+            />
+          </div>
           <div className={styles.name}>
             <Highlighter
               highlightClassName={styles.highlight}
@@ -130,6 +144,7 @@ const CountriesTable = ({ countries, keyword }) => {
           </div>
         </div>
       ))}
+
     </div>
   );
 };

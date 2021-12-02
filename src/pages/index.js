@@ -5,7 +5,7 @@ import CountriesTable from "../components/CountriesTable/CountriesTable";
 import { useState } from "react";
 
 export default function Home({ countries }) {
-  // console.log(countries.filter( country => country.name === 'Antarctica'))
+  console.log(countries.filter( country => country.name === 'Afghanistan'))
   const [keyword, setKeyword] = useState("");
 
   const filteredCountries = countries.filter(
@@ -22,12 +22,16 @@ export default function Home({ countries }) {
 
   return (
     <Layout>
-      <div className={styles.counts}>Found {countries.length} countries</div>
+      <div className={styles.inputContainer}>
+        <div className={styles.counts}>Found {filteredCountries.length} countries</div>
 
-      <SearchInput
-        placeholder="Filter by Name or Capital"
-        onChange={onInputChange}
-      />
+        <div className={styles.input}>
+          <SearchInput
+            placeholder="Filter by Name or Capital"
+            onChange={onInputChange}
+          />
+        </div>
+      </div>
 
       <CountriesTable countries={filteredCountries} keyword={keyword} />
     </Layout>
@@ -42,6 +46,7 @@ export const getStaticProps = async () => {
     if (!country.hasOwnProperty('capital')) {
       country.capital = ''
     }
+    country.bookmark = false
   }
 
   return {
