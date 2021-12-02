@@ -5,7 +5,7 @@ import CountriesTable from "../components/CountriesTable/CountriesTable";
 import { useState } from "react";
 
 export default function Home({ countries }) {
-  console.log(countries.filter( country => country.name === 'Antarctica'))
+  // console.log(countries.filter( country => country.name === 'Antarctica'))
   const [keyword, setKeyword] = useState("");
 
   const filteredCountries = countries.filter(
@@ -29,7 +29,7 @@ export default function Home({ countries }) {
         onChange={onInputChange}
       />
 
-      <CountriesTable countries={filteredCountries} />
+      <CountriesTable countries={filteredCountries} keyword={keyword} />
     </Layout>
   );
 }
