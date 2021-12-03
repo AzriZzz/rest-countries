@@ -45,6 +45,9 @@ const BarChart = ({ barChart }) => {
       xaxis: {
         categories: countryName,
       },
+      fill: {
+        colors: ['#124a63']
+      }
     },
   };
 

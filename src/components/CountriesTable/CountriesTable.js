@@ -8,6 +8,7 @@ import Highlighter from "react-highlight-words";
 import Image from "next/image";
 import ReactPaginate from "react-paginate";
 import BarChart from "../BarChart/BarChart";
+import Checkbox from "../Checkbox/Checkbox"
 
 const orderBy = (countries, value, direction) => {
   if (direction === "asc") {
@@ -117,6 +118,9 @@ const CountriesTable = ({ countries, keyword }) => {
     setPageNumber(selected);
   };
 
+  // barChart mapping
+  const [barChart, setBarChart] = useState();
+
   const displayCountries = orderedCountries
     .slice(pagesVisited, pagesVisited + countryPerPage)
     .map((country, index) => {
@@ -157,51 +161,15 @@ const CountriesTable = ({ countries, keyword }) => {
             />
           </div>
           <div className={styles.favourite}>
-            {/* adding key to re-rendered the value of the checkbox when update? */}
-            <input
-              key={Math.random()}
-              type="checkbox"
-              defaultChecked={country.favourite}
-              onChange={() => handleChange(country)}
+            <Checkbox 
+              emitChild={setBarChart}
+              defaultChecked={country.favourite} 
+              country={country}
             />
           </div>
         </div>
       );
     });
-
-  // barChart mapping
-  const [barChart, setBarChart] = useState();
-
-  const handleChange = (country) => {
-    let storageFavourites = [];
-
-    // retrieve data from if exist in localStorage
-    if (localStorage.getItem("favourite")) {
-      storageFavourites = JSON.parse(localStorage.getItem("favourite"));
-    }
-
-    // create a new favourite object
-    const newFavourite = {
-      ...country,
-      favourite: (country.favourite = country.favourite ? false : true),
-    };
-
-    // check whether if exist or not in the storage
-    let found = storageFavourites.filter((el) => el.name === newFavourite.name);
-
-    // push into array if not exist in storage and if favourite is true
-    if (found.length === 0 && newFavourite.favourite) {
-      storageFavourites.push(newFavourite);
-    } else {
-      storageFavourites = storageFavourites.filter(
-        (el) => el.name !== newFavourite.name
-      );
-    }
-
-    setBarChart(storageFavourites);
-    // save into local storage
-    localStorage.setItem("favourite", JSON.stringify(storageFavourites));
-  };
 
   useEffect(() => {
     const setKeyword = [keyword];
