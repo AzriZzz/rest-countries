@@ -44,6 +44,8 @@ export default function Home({ countries }) {
           <SearchInput
             placeholder="Filter by Name or Capital"
             onChange={onInputChange}
+            keyword={keyword}
+            emitChild={setKeyword}
           />
         </div>
       </div>

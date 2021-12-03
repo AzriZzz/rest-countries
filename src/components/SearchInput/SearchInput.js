@@ -1,14 +1,25 @@
-import styles from './SearchInput.module.css'
-import SearchRounded from "@material-ui/icons/SearchRounded";
+import styles from "./SearchInput.module.css";
+import { ClearRounded, SearchRounded } from "@material-ui/icons";
 
+const SearchInput = ({ keyword, emitChild, ...rest }) => {
+  // Reset Input Field handler
+  const resetInputField = () => {
+    emitChild("");
+  };
 
-const SearchInput = ({...rest}) => {
   return (
     <div className={styles.wrapper}>
       <SearchRounded color="inherit" />
-      <input className={styles.input} {...rest} />
+      <input className={styles.input} value={keyword} {...rest} />
+      {keyword.length > 0 && (
+        <ClearRounded
+          className={styles.clear_field}
+          onClick={resetInputField}
+          color="inherit"
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default SearchInput
+export default SearchInput;
