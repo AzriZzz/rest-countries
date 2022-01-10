@@ -66,9 +66,17 @@ export const getStaticProps = async () => {
     country.favourite = false;
   }
 
+  const newCountry = countries.map((country) => ({
+    name: country.name,
+    capital: country.capital,
+    region: country.region,
+    flag: country.flag,
+    population: country.population,
+  }));
+
   return {
     props: {
-      countries,
+      countries: newCountry,
     },
   };
 };
