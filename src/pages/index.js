@@ -1,8 +1,8 @@
-import Layout from "../components/Layout/Layout";
-import styles from "../styles/Home.module.css";
-import SearchInput from "../components/SearchInput/SearchInput";
+import { useEffect, useState } from "react";
 import CountriesTable from "../components/CountriesTable/CountriesTable";
-import { useState, useEffect } from "react";
+import Layout from "../components/Layout/Layout";
+import SearchInput from "../components/SearchInput/SearchInput";
+import styles from "../styles/Home.module.css";
 
 export default function Home({ countries }) {
   const [keyword, setKeyword] = useState("");
@@ -31,7 +31,7 @@ export default function Home({ countries }) {
         country[0].favourite = storage.favourite;
       }
     }
-  }, []);
+  });
 
   return (
     <Layout>
@@ -61,7 +61,7 @@ export const getStaticProps = async () => {
 
   for (let country of countries) {
     if (!country.hasOwnProperty("capital")) {
-      country.capital = "";
+      country.capital = "-";
     }
     country.favourite = false;
   }

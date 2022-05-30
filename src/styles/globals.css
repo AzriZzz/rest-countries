@@ -27,7 +27,7 @@
 html,
 body {
   padding: 0;
-  margin: 0;
+  margin: 8px;
   font-family: var(--font-family);
   background-color: var(--background-color);
   color: var(--text-color);
@@ -62,5 +62,4 @@ input[type="checkbox"] {
   border: 2px solid #ddd;
   margin-right: 4px;
   margin-top: 10px;
-
 }
